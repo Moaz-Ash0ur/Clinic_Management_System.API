@@ -26,7 +26,58 @@ namespace ClinicManagement.API.Controllers
             _sender = sender;
         }
 
+        [HttpGet]
+        [ProducesResponseType(typeof(List<SessionDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [EndpointSummary("Retrieves all sessions.")]
+        [EndpointDescription("Returns a list of all sessions in the system.")]
+        [EndpointName("GetAllSessions")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> GetAll(CancellationToken ct)
+        {
+            var result = await _sender.Send(new GetAllSessionsQuery(), ct);
 
+            return result.Match(
+                response => Ok(response),
+                Problem);
+        }
+
+
+        [HttpGet("{sessionId:guid}")]
+        [ProducesResponseType(typeof(SessionDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [EndpointSummary("Retrieves a session by id.")]
+        [EndpointDescription("Returns session details for the given session id.")]
+        [EndpointName("GetSessionById")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> GetById(Guid sessionId, CancellationToken ct)
+        {
+            var result = await _sender.Send(
+                new GetSessionByIdQuery(sessionId), ct);
+
+            return result.Match(
+                response => Ok(response),
+                Problem);
+        }
+
+
+
+        [HttpGet("doctor/{doctorId:guid}")]
+        [ProducesResponseType(typeof(List<SessionDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [EndpointSummary("Retrieves sessions by doctor id.")]
+        [EndpointDescription("Returns all sessions assigned to the specified doctor.")]
+        [EndpointName("GetSessionsByDoctorId")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> GetByDoctorId(Guid doctorId, CancellationToken ct)
+        {
+            var result = await _sender.Send(
+                new GetSessionsByDoctorIdQuery(doctorId), ct);
+
+            return result.Match(
+                response => Ok(response),
+                Problem);
+        }
 
 
         [HttpPost("create/{appointmentId:guid}")]

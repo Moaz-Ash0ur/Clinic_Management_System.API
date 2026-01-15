@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ClinicManagement.Application.Featuers.Sessions.Queries.GetSessionByDoctorId
 {
-    public sealed record GetSessionsByDoctorIdQuery(Guid DoctorId) : IRequest<Result<IReadOnlyList<SessionDto>>>;
+    public sealed record GetSessionsByDoctorIdQuery(Guid DoctorId) : IRequest<Result<List<SessionDto>>>;
 
 
 }
