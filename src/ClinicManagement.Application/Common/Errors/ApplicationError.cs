@@ -157,7 +157,13 @@ namespace ClinicManagement.Application.Common.Errors
              Error.Conflict(
                  "Appointment.NotReady",
                  "Appointment is not ready to start a session");
-             
+
+        public static Error SessionNotCompleted =>
+            Error.Conflict(
+                "Session_Not_Completed",
+                "Session Not Completed Yet");
+        
+
         // =========================
         // 🧍 Attendance
         // =========================
@@ -201,6 +207,12 @@ namespace ClinicManagement.Application.Common.Errors
             Error.NotFound(
                 code: "MedicalRecord.NotFound",
                 description: "Medical record does not exist.");
+
+
+        public static readonly Error MedicalRecordAlreadyExists =
+            Error.Conflict(
+                code: "MedicalRecord_MedicalRecordAlreadyExists",
+                description: "A MedicalRecord already exists for this session.");
 
         // =========================
         // 💰 Billing

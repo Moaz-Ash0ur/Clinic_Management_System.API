@@ -24,25 +24,21 @@ namespace ClinicManagement.Domain.Patients.MedicalRecords
 
         private MedicalRecord() { }
 
-        private MedicalRecord(Guid id, Guid patientId, Patient patient, Guid sessionId, Session session,
-            string diagnosis, string? notes)
+        private MedicalRecord(Guid id, Guid patientId, Guid sessionId , string diagnosis, string? notes)
             : base(id)
         {
             PatientId = patientId;
-            Patient = patient;
             SessionId = sessionId;
-            Session = session;
             Diagnosis = diagnosis;
             Notes = notes;
         }
 
-        public static Result<MedicalRecord> Create(Guid id, Guid patientId, Patient patient,
-            Guid sessionId, Session session, string diagnosis, string? notes)
+        public static Result<MedicalRecord> Create(Guid id, Guid patientId, Guid sessionId, string diagnosis, string? notes)
         {
             if (string.IsNullOrWhiteSpace(diagnosis))
                 return MedicalRecordErrors.DiagnosisRequired;
 
-            return new MedicalRecord(id, patientId, patient, sessionId, session, diagnosis, notes);
+            return new MedicalRecord(id, patientId, sessionId , diagnosis, notes);
         }
 
         public Result<Updated> Update(string diagnosis, string? notes)
@@ -55,6 +51,9 @@ namespace ClinicManagement.Domain.Patients.MedicalRecords
 
             return Result.Updated;
         }
+
+
+         
     }
 
 }

@@ -151,7 +151,4 @@ namespace ClinicManagement.API.Controllers
 
 
 
-
-
-
 }
