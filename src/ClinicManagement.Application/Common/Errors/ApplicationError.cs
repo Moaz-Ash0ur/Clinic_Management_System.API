@@ -194,10 +194,10 @@ namespace ClinicManagement.Application.Common.Errors
                 code: "Prescription.AlreadyExists",
                 description: "A prescription already exists for this session.");
 
-        public static readonly Error PrescriptionNotAllowed =
+        public static readonly Error PrescriptionNotFound =
             Error.Conflict(
-                code: "Prescription.NotAllowed",
-                description: "Prescription can only be created for confirmed sessions with present patients.");
+                code: "Prescription_Not_Found",
+                description: "Prescription Not Found.");
 
         // =========================
         // 📋 Medical Records

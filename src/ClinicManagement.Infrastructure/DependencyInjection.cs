@@ -88,6 +88,7 @@ namespace ClinicManagement.Infrastructure
             services.AddScoped<ITokenProvider, TokenProvider>();
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<IPrescriptionPdfGenerator, PrescriptionPdfGenerator>();
 
 
             services.AddHostedService<AutoMissedSessionJob>();

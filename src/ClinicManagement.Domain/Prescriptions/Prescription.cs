@@ -1,5 +1,6 @@
 ﻿using ClinicManagement.Domain.Common;
 using ClinicManagement.Domain.Common.Results;
+using ClinicManagement.Domain.Patients;
 using ClinicManagement.Domain.Sessions;
 using System;
 using System.Collections.Generic;
@@ -8,29 +9,63 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ClinicManagement.Domain.Prescriptions
-
 {
     public sealed class Prescription : AuditableEntity
     {
-        public string MedicationName { get; set; }
-        public string Dosage { get; set; }
-        public string? Notes { get; set; }
+        public Guid PatientId { get; private set; }
+        public Patient? Patient { get; private set; }
+
         public Guid SessionId { get; private set; }
         public Session? Session { get; private set; }
 
-        private Prescription() { }
+        public string MedicationName { get; private set; }  
+        public string Dosage { get; private set; }           
+        public string Description { get; private set; }     
 
-        private Prescription(Guid id, Guid sessionId, Session session)
+        private Prescription() { } 
+
+        private Prescription(Guid id, Guid patientId, Guid sessionId, string medicationName, string dosage, string description)
             : base(id)
         {
+            PatientId = patientId;
             SessionId = sessionId;
-            Session = session;
+            MedicationName = medicationName;
+            Dosage = dosage;
+            Description = description;
         }
 
-        public static Result<Prescription> Create(Guid id, Guid sessionId, Session session)
+        public static Result<Prescription> Create(Guid id, Guid patientId, Guid sessionId, string medicationName, string dosage, string description)
         {
-            return new Prescription(id, sessionId, session);
+            if (string.IsNullOrWhiteSpace(medicationName))
+                return PrescriptionErrors.MedicationNameRequired;
+
+            if (string.IsNullOrWhiteSpace(dosage))
+                return PrescriptionErrors.DosageRequired;
+
+            if (string.IsNullOrWhiteSpace(description))
+                return PrescriptionErrors.DescriptionRequired;
+
+            return new Prescription(id, patientId, sessionId, medicationName, dosage, description);
+        }
+
+        public Result<Updated> Update(string medicationName, string dosage, string description)
+        {
+            if (string.IsNullOrWhiteSpace(medicationName))
+                return PrescriptionErrors.MedicationNameRequired;
+
+            if (string.IsNullOrWhiteSpace(dosage))
+                return PrescriptionErrors.DosageRequired;
+
+            if (string.IsNullOrWhiteSpace(description))
+                return PrescriptionErrors.DescriptionRequired;
+
+            MedicationName = medicationName;
+            Dosage = dosage;
+            Description = description;
+
+            return Result.Updated;
         }
     }
+
 
 }

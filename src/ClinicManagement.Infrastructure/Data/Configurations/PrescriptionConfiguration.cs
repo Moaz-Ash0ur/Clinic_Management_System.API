@@ -23,8 +23,12 @@ public class PrescriptionConfiguration : IEntityTypeConfiguration<Prescription>
                .IsRequired()
                .HasMaxLength(200);
 
-        builder.Property(p => p.Notes)
-               .HasMaxLength(1000)
-               .IsRequired(false);
+        builder.Property(p => p.Description)
+               .IsRequired()
+               .HasMaxLength(500);
+               
+
+
+
     }
 }
