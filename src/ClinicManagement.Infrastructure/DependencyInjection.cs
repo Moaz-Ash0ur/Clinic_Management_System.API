@@ -93,6 +93,9 @@ namespace ClinicManagement.Infrastructure
 
             services.AddHostedService<AutoMissedSessionJob>();
 
+            services.Configure<TwilioSettings>(configuration.GetSection("Twilio"));
+            services.AddScoped<ISmsService, TwilioSmsService>();
+
             return services;
         }
     }
