@@ -29,21 +29,21 @@ Efficiently manage clinic time and prevent conflicts between:
 
 ---
 
-### 🎯 Goal 2: Notification System (🚧 In Progress)
+### 🎯 Goal 2: Notification System (✅ Completed)
 
 Deliver smart notifications to doctors and patients based on clear **business rules**.
 
-**Examples:**
+**Examples implemented:**
 
-* Appointment reminders for patients
-* Doctor notification when a patient arrives
+* Appointment reminders for patients **24 hours before the scheduled time** using a **background service**.
+
+**Planned / Future support:**
+
 * Notifications for appointment cancellation or rescheduling
-* Session start and completion notifications
 
-Planned support:
+**Implemented channel:**
 
-* SMS notifications (e.g., Twilio)
-* Extensible notification system for future channels
+* SMS notifications via Twilio (extensible for future channels)
 
 ---
 

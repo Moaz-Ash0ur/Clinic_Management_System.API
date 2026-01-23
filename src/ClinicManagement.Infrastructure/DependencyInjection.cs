@@ -15,6 +15,8 @@ using ClinicManagement.Infrastructure.Identity;
 using ClinicManagement.Infrastructure.Services;
 using ClinicManagement.Application.Common.Interfaces;
 using ClinicManagement.Infrastructure.Repsitories;
+using ClinicManagement.Infrastructure.Settings;
+using ClinicManagement.Domain.Identity;
 
 
 namespace ClinicManagement.Infrastructure
@@ -91,7 +93,7 @@ namespace ClinicManagement.Infrastructure
             services.AddScoped<IPrescriptionPdfGenerator, PrescriptionPdfGenerator>();
 
 
-            services.AddHostedService<AutoMissedSessionJob>();
+            services.AddHostedService<ReminderForAppointment>();
 
             services.Configure<TwilioSettings>(configuration.GetSection("Twilio"));
             services.AddScoped<ISmsService, TwilioSmsService>();

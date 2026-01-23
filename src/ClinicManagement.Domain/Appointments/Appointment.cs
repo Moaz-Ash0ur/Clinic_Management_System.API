@@ -20,6 +20,8 @@ namespace ClinicManagement.Domain.Appointments
 
         public AppointmentStatus Status { get; private set; }
 
+        public bool reminderSent { get; private set; } = false;
+
         public Session? Session { get; private set; }
 
         private Appointment() { }
@@ -81,7 +83,11 @@ namespace ClinicManagement.Domain.Appointments
             return Result.Updated;
         }
 
-
+        public Result<Updated> SetReminderSend()
+        {
+            this.reminderSent = true;
+            return Result.Updated;
+        }
 
 
 

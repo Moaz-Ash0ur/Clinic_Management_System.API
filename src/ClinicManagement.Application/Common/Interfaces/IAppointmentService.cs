@@ -19,6 +19,8 @@ namespace ClinicManagement.Application.Common.Interfaces
          Task<bool> DoctorIsAvailableAsync(Guid doctorId, DateTime start);
          Task<bool> DoctorHasConflictAsync(Guid doctorId, DateTime start);
         bool IsValidTime(DateTime start, DateTime end);
+        Task<List<Appointment>> GetScheduledAppointment();
+
     }
 
 

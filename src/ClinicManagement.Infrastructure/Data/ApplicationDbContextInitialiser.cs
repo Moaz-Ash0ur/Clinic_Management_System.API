@@ -1,5 +1,6 @@
 using ClinicManagement.Domain.Doctors;
 using ClinicManagement.Domain.Enums;
+using ClinicManagement.Domain.Identity;
 using ClinicManagement.Domain.Patients;
 using ClinicManagement.Domain.Roles;
 using ClinicManagement.Infrastructure.Identity;

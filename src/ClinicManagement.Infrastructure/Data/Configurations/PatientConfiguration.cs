@@ -1,4 +1,5 @@
 using ClinicManagement.Domain.Appointments;
+using ClinicManagement.Domain.Identity;
 using ClinicManagement.Domain.Patients;
 using ClinicManagement.Domain.Patients.MedicalRecords;
 using ClinicManagement.Infrastructure.Identity;
@@ -18,7 +19,7 @@ public class PatientConfiguration : IEntityTypeConfiguration<Patient>
         builder.HasKey(p => p.Id);
 
         // Properties
-        builder.HasOne<AppUser>()
+        builder.HasOne(p => p.User)
         .WithOne()         
         .HasForeignKey<Patient>(p => p.UserId) 
         .IsRequired()

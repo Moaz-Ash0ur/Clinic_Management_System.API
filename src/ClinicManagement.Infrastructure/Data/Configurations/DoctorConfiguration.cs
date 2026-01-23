@@ -1,6 +1,7 @@
 using ClinicManagement.Domain.Appointments;
 using ClinicManagement.Domain.Doctors;
 using ClinicManagement.Domain.DoctorWorkSchedules;
+using ClinicManagement.Domain.Identity;
 using ClinicManagement.Domain.Patients;
 using ClinicManagement.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;

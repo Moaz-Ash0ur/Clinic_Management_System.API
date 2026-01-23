@@ -1,9 +1,11 @@
 ﻿using ClinicManagement.Application.Common.Interfaces;
+using ClinicManagement.Application.Featuers.Appointments.Dtos;
 using ClinicManagement.Domain.Appointments;
 using ClinicManagement.Domain.Common.Constamts;
 using ClinicManagement.Domain.DoctorWorkSchedules;
 using ClinicManagement.Domain.Enums;
 using ClinicManagement.Domain.Patients;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +18,12 @@ namespace ClinicManagement.Infrastructure.Services
     {
         private readonly IRepository<DoctorWorkSchedule> _scheduleRepo;
         private readonly IRepository<Appointment> _appointmentRepo;
-        private readonly IRepository<Patient> _patientRepo;
-
         private readonly IUnitOfWork _uow;
 
         public AppointmentService(IUnitOfWork uow)
         {
             _uow = uow;
             _scheduleRepo = _uow.GetRepository<DoctorWorkSchedule>();
-            _patientRepo = _uow.GetRepository<Patient>();
             _appointmentRepo = _uow.GetRepository<Appointment>();
         }
 
@@ -69,20 +68,35 @@ namespace ClinicManagement.Infrastructure.Services
             );
         }
 
-        //{
-        //  "doctorId": "d3ed3dd7-b577-4d84-8f30-1f76f68c129b",
-        //  "patientId": "1ce234a7-9d09-4bd4-994a-ab45209bd3eb",
-        //  "scheduledAt": "2026-01-13T14:48:00.152Z"
-        //}
-
+      
         public bool IsValidTime(DateTime start, DateTime end)
         {
             return start > DateTime.Now && end > start;
         }
 
-      
 
+        public async Task<List<Appointment>> GetScheduledAppointment()
+        {         
+            var now = DateTime.Now;
+
+            //need reCheck for Select Col what need just
+            //reminderSent ScheduledAt PatientName
+
+            return await _appointmentRepo
+             .GetQueryable()
+             .Include(a => a.Patient)
+                .ThenInclude(p => p!.User)
+             .Where(a =>
+                 a.Status == AppointmentStatus.Scheduled &&
+                 !a.reminderSent &&
+                 a.ScheduledAt <= now.AddHours(24))
+                        
+             .ToListAsync();
+
+        }
+    
     }
+
 
 
 
