@@ -37,7 +37,7 @@ namespace ClinicManagement.Infrastructure.BackgroundJobs
          
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using var timer = new PeriodicTimer(TimeSpan.FromMinutes(3));
+            using var timer = new PeriodicTimer(TimeSpan.FromMinutes(_appSettings.ReminderAppointmentFrequencyHours));
 
             while (await timer.WaitForNextTickAsync(stoppingToken))
             {
@@ -68,6 +68,7 @@ namespace ClinicManagement.Infrastructure.BackgroundJobs
                         }
                     }
                     await uow.SaveChangesAsync();
+                    _logger.LogInformation("Send SMS Notification For Reminder before one day the Appointment at {Now}", _dateTime.GetUtcNow());
 
                 }
                 catch (Exception ex)

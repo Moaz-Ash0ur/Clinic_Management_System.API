@@ -59,6 +59,3 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
 
 }
 
-
-
-

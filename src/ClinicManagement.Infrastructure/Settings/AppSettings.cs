@@ -15,8 +15,9 @@ namespace ClinicManagement.Infrastructure.Settings
         public int DefaultPageNumber { get; set; }
         public int DefaultPageSize { get; set; }
         public int BookingCancellationThresholdMinutes { get; set; }
-        public int AutoMissedSessionCheckFrequencyMinutes { get; set; }
+        public int ReminderAppointmentFrequencyHours { get; set; }
         public string CorsPolicyName { get; set; } = default!;
         public string[] AllowedOrigins { get; set; } = default!;
     }
+
 }

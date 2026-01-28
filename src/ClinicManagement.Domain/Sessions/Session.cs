@@ -71,21 +71,6 @@ namespace ClinicManagement.Domain.Sessions
             return Result.Success;
         }
 
-        public Result<Success> MarkAsMissed()
-        {
-            //if (Status != SessionStatus.Pending)
-            //    return SessionErrors.InvalidSessionState;
-
-            //var appointmentResult = appointment.ChangeStatus(AppointmentStatus.Missed);
-            //if (appointmentResult.IsError)
-            //    return appointmentResult.Errors;
-
-            //Status = SessionStatus.Missed;
-            //attendance.MarkAbsent();
-
-            return Result.Success;
-        }
-
         public void AddDoctorNotes(string notes)
         {
             DoctorNotes = notes;
