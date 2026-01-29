@@ -89,8 +89,23 @@ namespace ClinicManagement.Infrastructure
 
             services.AddScoped<ITokenProvider, TokenProvider>();
             services.AddScoped<IAppointmentService, AppointmentService>();
-            services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IPrescriptionPdfGenerator, PrescriptionPdfGenerator>();
+
+
+            services.AddScoped<IIdentityService, IdentityService>();
+
+            services.AddScoped<IAuthService>(sp =>
+                sp.GetRequiredService<IIdentityService>());
+
+            services.AddScoped<IUserManagementService>(sp =>
+                sp.GetRequiredService<IIdentityService>());
+         
+            services.AddScoped<IPasswordService>(sp =>
+                sp.GetRequiredService<IIdentityService>());
+
+            services.AddScoped<IEmailConfirmationService>(sp =>
+                sp.GetRequiredService<IIdentityService>());
+
 
 
             services.AddHostedService<ReminderForAppointment>();

@@ -2,6 +2,7 @@
 using ClinicManagement.Application.Featuers.Users.Dtos;
 using ClinicManagement.Domain.Common.Results;
 using ClinicManagement.Domain.Identity;
+using ClinicManagement.Infrastructure.Repsitories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -134,6 +135,21 @@ namespace ClinicManagement.Infrastructure.Identity
             return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
         }
 
+
+        public async Task<Result<Success>> RevokeAsync(string token,CancellationToken ct)
+        {
+
+            var refreshToken = await _refreshTokenRepo.FindAsync(rf => rf.Token == token);
+            if (refreshToken is null)
+                return RefreshTokenErrors.NotFound;
+
+            var revokeResult = refreshToken.Revoke();
+            if (revokeResult.IsError)
+                return revokeResult.Errors;
+
+            await _uow.SaveChangesAsync();
+            return Result.Success;
+        }
 
 
     }

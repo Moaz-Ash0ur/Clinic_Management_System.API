@@ -1,4 +1,8 @@
-﻿using ClinicManagement.Domain.Roles;
+﻿using ClinicManagement.Application.Common.Interfaces;
+using ClinicManagement.Application.Featuers.Users.Dtos;
+using ClinicManagement.Domain.Common.Results;
+using ClinicManagement.Domain.Roles;
+using MediatR;
 
 namespace ClinicManagement.Application.Featuers.Users.Command
 {
@@ -17,8 +21,7 @@ namespace ClinicManagement.Application.Featuers.Users.Command
            this.password = password;
         }
 
-      
-
-
+     
     }
+
 }

@@ -11,7 +11,7 @@ public interface ITokenProvider
 
     ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
 
-
+    Task<Result<Success>> RevokeAsync(string token, CancellationToken ct);
 
 
 

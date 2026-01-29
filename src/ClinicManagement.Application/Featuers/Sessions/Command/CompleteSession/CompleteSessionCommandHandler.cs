@@ -21,7 +21,7 @@ namespace ClinicManagement.Application.Featuers.Sessions.Command.CompleteSession
             _sessionRepo = uow.GetRepository<Session>();
             _appointmentRepo = _uow.GetRepository<Appointment>();
         }
-
+         
         public async Task<Result<Success>> Handle(CompleteSessionCommand command,CancellationToken ct)
         {
             var session = await _sessionRepo.GetByIdAsync(command.SessionId);

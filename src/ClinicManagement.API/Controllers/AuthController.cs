@@ -1,14 +1,25 @@
 ﻿using Asp.Versioning;
+using ClinicManagement.Application.Common.Interfaces;
+using ClinicManagement.Application.Featuers.Users.Command.ConfirmEmail;
+using ClinicManagement.Application.Featuers.Users.Command.ForgotPassword;
+using ClinicManagement.Application.Featuers.Users.Command.NewFolder;
+using ClinicManagement.Application.Featuers.Users.Command.NewFolder___Copy;
 using ClinicManagement.Application.Featuers.Users.Doctors.Command.RegisterDoctor;
 using ClinicManagement.Application.Featuers.Users.Dtos;
 using ClinicManagement.Application.Featuers.Users.Patients.Command.RegisterPatient;
 using ClinicManagement.Application.Featuers.Users.Queries.Login;
 using ClinicManagement.Contracts.Requests.Doctors;
 using ClinicManagement.Contracts.Requests.Patients;
+using ClinicManagement.Contracts.Requests.Users;
+using ClinicManagement.Domain.Common.Results;
 using ClinicManagement.Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using ForgotPasswordRequest = ClinicManagement.Contracts.Requests.Users.ForgotPasswordRequest;
+using ResetPasswordRequest = ClinicManagement.Contracts.Requests.Users.ResetPasswordRequest;
 
 namespace ClinicManagement.API.Controllers
 {
@@ -18,10 +29,13 @@ namespace ClinicManagement.API.Controllers
     {
 
         private readonly ISender _sender;
+        private readonly IUser _currentUser;
+        private const string RefreshTokenCookieName = "refreshToken";
 
-        public AuthController(ISender sender)
+        public AuthController(ISender sender, IUser currentUser)
         {
             _sender = sender;
+            _currentUser = currentUser;
         }
 
 
@@ -89,6 +103,10 @@ namespace ClinicManagement.API.Controllers
 
             return result.Match(response => Ok(response),Problem);
         }
+
+
+
+       
 
     }
 

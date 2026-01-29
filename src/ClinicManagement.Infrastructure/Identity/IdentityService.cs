@@ -9,11 +9,13 @@ using ClinicManagement.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ClinicManagement.Infrastructure.Identity
@@ -23,7 +25,6 @@ namespace ClinicManagement.Infrastructure.Identity
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-
         public IdentityService( UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
@@ -31,7 +32,7 @@ namespace ClinicManagement.Infrastructure.Identity
         }
 
 
-        private async Task<Result<AppUserDto>> RegisterInternalAsync(RegisterCommand cmd, Role role)
+        public async Task<Result<AppUserDto>> RegisterAsync(RegisterCommand cmd, Role role)
         {
             if (await IsUserExist(cmd.Email))
                 return Error.Conflict("Email already exists");
@@ -64,12 +65,12 @@ namespace ClinicManagement.Infrastructure.Identity
 
         public async Task<Result<AppUserDto>> RegisterDoctorAsync(RegisterCommand cmd)
         {
-            return await RegisterInternalAsync(cmd, Role.Doctor);
+            return await RegisterAsync(cmd, Role.Doctor);
         }
 
         public async Task<Result<AppUserDto>> RegisterPatientAsync(RegisterCommand cmd)
         {
-            return await RegisterInternalAsync(cmd, Role.Patient);
+            return await RegisterAsync(cmd, Role.Patient);
         }
 
         public async Task<Result<AppUserDto>> LoginAsync(string email, string password)
@@ -86,7 +87,7 @@ namespace ClinicManagement.Infrastructure.Identity
 
             return await MapToDtoAsync(user);
         }
-    
+       
         public async Task<Result<AppUserDto>> GetUserByIdAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -189,6 +190,80 @@ namespace ClinicManagement.Infrastructure.Identity
             return Error.NotFound("Users Not Found !");
 
         }
+
+        public async Task<Result<Success>> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+                return Error.NotFound("UserNotFound", "User not found");
+
+            var result = await _userManager.ChangePasswordAsync(
+                user, currentPassword, newPassword);
+
+            if (!result.Succeeded)
+                return result.Errors
+                    .Select(e => Error.Validation(e.Code, e.Description))
+                    .ToList();
+
+            return Result.Success;
+        }
+
+        public async Task<Result<Success>> ConfirmEmailAsync(string email, string token)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+                return Error.NotFound("UserNotFound", "User not found");
+
+            var decodedToken =
+                Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+            if (!result.Succeeded)
+                return result.Errors
+                    .Select(e => Error.Validation(e.Code, e.Description))
+                    .ToList();
+
+             //send email demo
+
+            return Result.Success;
+        }
+
+        public async Task<Result<Success>> SendResetPasswordLinkAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+                return Result.Success;
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+            
+            //send email for reset
+
+            return Result.Success;
+        }
+
+        public async Task<Result<Success>> ResetPasswordAsync(string email, string token, string newPassword)
+        { 
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+                return Error.NotFound("UserNotFound", "User not found");
+
+            var decodedToken =
+                Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+
+            var result = await _userManager.ResetPasswordAsync(
+                user, decodedToken, newPassword);
+
+            if (!result.Succeeded)
+                return result.Errors
+                    .Select(e => Error.Validation(e.Code, e.Description))
+                    .ToList();
+
+            return Result.Success;
+        }
+
+
 
 
 

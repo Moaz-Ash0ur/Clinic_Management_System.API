@@ -55,6 +55,18 @@ namespace ClinicManagement.Domain.Identity
         }
 
 
+        public Result<Success> Revoke()
+        {
+            if (RevokedAt != null)
+                return RefreshTokenErrors.AlreadyRevoked;
+
+            if (IsExpired)
+                return RefreshTokenErrors.TokenExpired;
+
+            RevokedAt = DateTime.UtcNow;
+            return Result.Success;
+        }
+
 
 
 
