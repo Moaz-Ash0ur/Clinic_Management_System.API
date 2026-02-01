@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace ClinicManagement.Application.Featuers.Users.Queries.Login
+namespace ClinicManagement.Application.Featuers.Users.Command.Login
 {
-    public sealed class LoginQueryValidator : AbstractValidator<LoginQuery>
+    public sealed class LoginCommandValidator : AbstractValidator<LoginCommand>
     {
-        public LoginQueryValidator()
+        public LoginCommandValidator()
         {
             RuleFor(request => request.Email)
                 .NotNull().NotEmpty()

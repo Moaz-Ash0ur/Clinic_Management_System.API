@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static ClinicManagement.Application.Common.Interfaces.ITokenProvider;
 
-namespace ClinicManagement.Application.Featuers.Users.Queries.Login
+namespace ClinicManagement.Application.Featuers.Users.Command.Login
 {
-    public record LoginQuery(string Email,string Password) : IRequest<Result<AuthResponse>>;
+    public record LoginCommand(string Email,string Password,string ipAddress) : IRequest<Result<AuthResponse>>;
 }

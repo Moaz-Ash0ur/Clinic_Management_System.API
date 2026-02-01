@@ -24,7 +24,12 @@ namespace ClinicManagement.Domain.Identity
 
         public static readonly Error ExpiryInvalid =
             Error.Validation("RefreshToken_Expiry_Invalid", "Expiry must be in the future.");
-    } 
+
+        public static readonly Error IpAddressRequired =
+           Error.Validation("RefreshToken_IP_Address_Required", "IP Address  is required.");
+
+
+    }
 
 
 }

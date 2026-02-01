@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace ClinicManagement.Contracts.Requests.Users
 {
+
+
+  public sealed record LoginRequest(
+ string Email,
+ string Password
+);
+
+
     public sealed record ChangePasswordRequest(
-     string UserId,
      string CurrentPassword,
      string NewPassword
  );
@@ -27,6 +34,9 @@ namespace ClinicManagement.Contracts.Requests.Users
     string Token,
     string NewPassword
 );
+
+
+
 
 
 }

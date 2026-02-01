@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -27,6 +28,7 @@ namespace ClinicManagement.Infrastructure.Identity
 
         }
 
+
         public async Task<Result<AuthResponse>> GenerateJwtTokenAsync(AppUserDto user, CancellationToken ct = default)
         {
             var tokenResult = await CreateAsync(user, ct);
@@ -37,7 +39,7 @@ namespace ClinicManagement.Infrastructure.Identity
             }
 
             return tokenResult.Value;
-        }
+        } 
 
         public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
         {
@@ -66,7 +68,6 @@ namespace ClinicManagement.Infrastructure.Identity
         }
 
 
-
         private async Task<Result<AuthResponse>> CreateAsync(AppUserDto user, CancellationToken ct = default)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
@@ -81,12 +82,10 @@ namespace ClinicManagement.Infrastructure.Identity
         {
             new (JwtRegisteredClaimNames.Sub, user.Id!),
             new (JwtRegisteredClaimNames.Email, user.Email!),
+            new(ClaimTypes.Role, user.role.ToString())
         };
 
-            
-           claims.Add(new(ClaimTypes.Role, user.role.ToString()));
-            
-
+                      
             var descriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
@@ -100,50 +99,30 @@ namespace ClinicManagement.Infrastructure.Identity
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            var securityToken = tokenHandler.CreateToken(descriptor);
-
-            var oldRefreshTokens =  _refreshTokenRepo.GetQueryable()
-                  .Where(rt => rt.UserId == user.Id)
-                  .ExecuteDelete();
-
-            var refreshTokenResult = RefreshToken.Create(
-                Guid.NewGuid(),
-                GenerateRefreshToken(),
-                user.Id,
-                DateTime.UtcNow.AddDays(7));
-
-            if (refreshTokenResult.IsError)
-            {
-                return refreshTokenResult.Errors;
-            }
-
-            var refreshToken = refreshTokenResult.Value;
-
-            await _refreshTokenRepo.AddAsync(refreshToken);
-            await _uow.SaveChangesAsync();
+            var securityToken = tokenHandler.CreateToken(descriptor);          
 
             return new AuthResponse
             {
                 AccessToken = tokenHandler.WriteToken(securityToken),
-                RefreshToken = refreshToken.Token,
                 ExpiresOnUtc = expires
             };
         }
 
-        private static string GenerateRefreshToken()
+        public string GenerateRefreshToken()
         {
             return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
         }
 
 
-        public async Task<Result<Success>> RevokeAsync(string token,CancellationToken ct)
+        public async Task<Result<Success>> RevokeAsync(string token, string ipAddress, CancellationToken ct)
         {
 
             var refreshToken = await _refreshTokenRepo.FindAsync(rf => rf.Token == token);
             if (refreshToken is null)
                 return RefreshTokenErrors.NotFound;
 
-            var revokeResult = refreshToken.Revoke();
+
+            var revokeResult = refreshToken.Revoke(ipAddress);
             if (revokeResult.IsError)
                 return revokeResult.Errors;
 
@@ -151,8 +130,52 @@ namespace ClinicManagement.Infrastructure.Identity
             return Result.Success;
         }
 
+        public async Task<Result<RefreshToken>> RotateAsync(RefreshToken currentToken,string ipAddress,CancellationToken ct = default)
+        {
+            var revokeResult = currentToken.Revoke(ipAddress,currentToken.Id);
+            if (revokeResult.IsError)
+               return RefreshTokenErrors.AlreadyRevoked;
+
+
+            var newRefreshTokenResult = RefreshToken.Create(
+                Guid.NewGuid(),
+                GenerateRefreshToken(),
+                currentToken.UserId,
+                DateTime.UtcNow.AddDays(7),
+                ipAddress);
+
+            if (newRefreshTokenResult.IsError)
+                return newRefreshTokenResult.Errors;
+
+
+            var newRefreshToken = newRefreshTokenResult.Value;
+
+            await _refreshTokenRepo.AddAsync(newRefreshToken);
+            await _uow.SaveChangesAsync();
+
+            return newRefreshToken;
+        }
+
+        public async Task<Result<Success>> RevokeAllAsync(string userId, string ipAddress, CancellationToken ct)
+        {
+            var activeRefreshToken = await  _refreshTokenRepo
+                .GetQueryable()
+                .Where(t => t.UserId == userId)
+                .ToListAsync();
+
+            if(activeRefreshToken == null)
+                return RefreshTokenErrors.NotFound;
+
+
+            foreach (var refToken in activeRefreshToken)
+            {
+                refToken.Revoke(ipAddress);
+            }
+
+            return Result.Success;
+        }
+
+
 
     }
-
-
 }

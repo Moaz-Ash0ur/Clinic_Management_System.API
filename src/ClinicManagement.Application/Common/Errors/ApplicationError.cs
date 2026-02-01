@@ -241,6 +241,22 @@ namespace ClinicManagement.Application.Common.Errors
             Error.Forbidden(
                 code: "Authorization.Forbidden",
                 description: "You are not authorized to perform this action.");
+
+        public static readonly Error RefreshTokenNotFound =
+            Error.NotFound(
+                code: "Refresh_Token_Not_Found",
+                description: "Refresh Token Not Found.");
+
+
+        public static readonly Error RefreshTokenExpired =
+           Error.NotFound(
+               code: "Refresh_Token_Expired",
+               description: "Refresh Token Expired.");
+
+
+
+
+
     }
 
 }
