@@ -36,6 +36,7 @@ namespace ClinicManagement.Application.Featuers.Prescriptions.Queries.GetPrescri
                 .GetQueryable()
                 .AsNoTracking()
                 .Include(p => p.Patient)
+                   .ThenInclude(p => p!.User)
                 .FirstOrDefaultAsync(p => p.Id == query.PrescriptionId, ct);
 
             if (prescription is null)

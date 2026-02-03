@@ -3,7 +3,7 @@ using ClinicManagement.Domain.Common.Results;
 
 namespace ClinicManagement.Application.Common.Interfaces;
 
-public interface IUserManagementService
+public interface IUserService
 {
     Task<Result<Success>> UpdateUser(
         string userId,

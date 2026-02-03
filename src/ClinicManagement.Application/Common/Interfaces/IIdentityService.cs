@@ -8,7 +8,7 @@ namespace ClinicManagement.Application.Common.Interfaces;
 
 public interface IIdentityService :
     IAuthService,
-    IUserManagementService,
+    IUserService,
     IPasswordService,
     IEmailConfirmationService
 {

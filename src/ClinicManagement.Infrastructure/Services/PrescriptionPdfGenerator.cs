@@ -86,7 +86,7 @@ namespace ClinicManagement.Infrastructure.Services
                             .Bold()
                             .FontColor(Colors.Teal.Darken2);
 
-                        info.Item().Text($"Patient Name: {prescription.Patient.Id}");
+                        info.Item().Text($"Patient Name: {prescription.Patient!.User.FullName}");
                         info.Item().Text($"Session ID: {prescription.SessionId}");
                     });
 

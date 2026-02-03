@@ -97,7 +97,7 @@ namespace ClinicManagement.Infrastructure
             services.AddScoped<IAuthService>(sp =>
                 sp.GetRequiredService<IIdentityService>());
 
-            services.AddScoped<IUserManagementService>(sp =>
+            services.AddScoped<IUserService>(sp =>
                 sp.GetRequiredService<IIdentityService>());
          
             services.AddScoped<IPasswordService>(sp =>

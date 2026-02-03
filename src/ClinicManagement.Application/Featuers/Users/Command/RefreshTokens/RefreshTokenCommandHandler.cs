@@ -13,8 +13,8 @@ namespace ClinicManagement.Application.Featuers.Users.Command.RefreshTokens
         private readonly ITokenProvider _tokenService;
         private readonly IUnitOfWork _uow;
         private readonly IRepository<RefreshToken> _repo;
-        private readonly IUserManagementService _userService;
-        public RefreshTokenCommandHandler(ITokenProvider tokenService, IUnitOfWork uow, IUserManagementService userService)
+        private readonly IUserService _userService;
+        public RefreshTokenCommandHandler(ITokenProvider tokenService, IUnitOfWork uow, IUserService userService)
         {
             _tokenService = tokenService;
             _uow = uow;
