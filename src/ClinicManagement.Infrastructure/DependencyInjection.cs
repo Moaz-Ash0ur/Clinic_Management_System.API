@@ -106,12 +106,14 @@ namespace ClinicManagement.Infrastructure
             services.AddScoped<IEmailConfirmationService>(sp =>
                 sp.GetRequiredService<IIdentityService>());
 
-
-
             services.AddHostedService<ReminderForAppointment>();
 
             services.Configure<TwilioSettings>(configuration.GetSection("Twilio"));
             services.AddScoped<ISmsService, TwilioSmsService>();
+
+
+            
+
 
             return services;
         }

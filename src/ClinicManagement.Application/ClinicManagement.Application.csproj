@@ -25,6 +25,8 @@
 
 
 	<ItemGroup>
+	  <Folder Include="Featuers\Payments\Command\HandleWebhook\" />
+	  <Folder Include="Featuers\Payments\Command\InitializePayment\" />
 	  <Folder Include="Featuers\Sessions\Mappers\" />
 	  <Folder Include="Featuers\Users\Queries\GetUsers\" />
 	</ItemGroup>

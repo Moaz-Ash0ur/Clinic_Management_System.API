@@ -2,9 +2,8 @@
 {
     public enum PaymentMethod
     {
-        Cash,
-        Paymob,
-        VodafoneCash
+        Card,
+        Wallet,
     }
 
 }

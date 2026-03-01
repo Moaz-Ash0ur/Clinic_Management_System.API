@@ -3,9 +3,11 @@ using ClinicManagement.Application.Common.Interfaces;
 using ClinicManagement.Domain.Appointments;
 using ClinicManagement.Domain.Common.Results;
 using ClinicManagement.Domain.Enums;
+using ClinicManagement.Domain.Invoices;
 using ClinicManagement.Domain.Sessions;
 using ClinicManagement.Domain.Sessions.Attendances;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClinicManagement.Application.Featuers.Sessions.Command.CompleteSession
 {
@@ -13,6 +15,7 @@ namespace ClinicManagement.Application.Featuers.Sessions.Command.CompleteSession
     {
         private readonly IRepository<Session> _sessionRepo;
         private readonly IRepository<Appointment> _appointmentRepo;
+        private readonly IRepository<Invoice> _invoiceRepo;
         private readonly IUnitOfWork _uow;
 
         public CompleteSessionCommandHandler(IUnitOfWork uow)
@@ -20,15 +23,19 @@ namespace ClinicManagement.Application.Featuers.Sessions.Command.CompleteSession
             _uow = uow;
             _sessionRepo = uow.GetRepository<Session>();
             _appointmentRepo = _uow.GetRepository<Appointment>();
+            _invoiceRepo = _uow.GetRepository<Invoice>();
+
         }
-         
+
         public async Task<Result<Success>> Handle(CompleteSessionCommand command,CancellationToken ct)
         {
             var session = await _sessionRepo.GetByIdAsync(command.SessionId);
             if (session is null)
                 return ApplicationErrors.SessionNotFound;
 
-            await _uow.BeginTransactionAsync();
+          
+
+              await _uow.BeginTransactionAsync();
 
             try
             {
@@ -55,10 +62,25 @@ namespace ClinicManagement.Application.Featuers.Sessions.Command.CompleteSession
                 _sessionRepo.Update(session);
                 _appointmentRepo.Update(appointment);
 
+                
+                //make amount determine by doctor in futuer
+                var createInvoiceResult = Invoice.Create(Guid.NewGuid(),session.Id, appointment!.PatientId, 150);
+
+
+                if(createInvoiceResult.IsError) 
+                    return createInvoiceResult.Errors;
+
+
+               await _invoiceRepo.AddAsync(createInvoiceResult.Value);
                 await _uow.CommitAsync();
+
+
                 await _uow.SaveChangesAsync();
 
                 return Result.Success;
+
+              
+
             }
             catch
             {
@@ -67,10 +89,6 @@ namespace ClinicManagement.Application.Featuers.Sessions.Command.CompleteSession
             }
         }
     }
-
-
-    //-----------------------------------------------------
-
 
 
 
