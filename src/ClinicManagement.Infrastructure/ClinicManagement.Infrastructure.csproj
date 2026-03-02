@@ -34,9 +34,4 @@
 
 	</ItemGroup>
 
-
-	<ItemGroup>
-	  <Folder Include="Payments\" />
-	</ItemGroup>
-
 </Project>

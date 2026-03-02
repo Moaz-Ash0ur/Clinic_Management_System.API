@@ -5,7 +5,7 @@ namespace ClinicManagement.Application.Common.Interfaces
     public interface IPaymobClient
     {
         Task<Result<string>> GetAuthTokenAsync();
-        Task<Result<PaymentIntentResponse>> CreatePaymentIntentAsync(Guid invoiceId, int paymentMethodId);
+        Task<Result<string>> CreatePaymentIntentAsync(Guid invoiceId, int paymentMethodId, string specialReference);
     }
 
 

@@ -89,8 +89,7 @@ namespace ClinicManagement.Infrastructure.Services
              .Where(a =>
                  a.Status == AppointmentStatus.Scheduled &&
                  !a.reminderSent &&
-                 a.ScheduledAt <= now.AddHours(24))
-                        
+                 a.ScheduledAt <= now.AddHours(24))                     
              .ToListAsync();
 
         }

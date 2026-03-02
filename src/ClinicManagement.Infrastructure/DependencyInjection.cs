@@ -1,22 +1,23 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using ClinicManagement.Application.Common.Interfaces;
+using ClinicManagement.Domain.Identity;
+using ClinicManagement.Infrastructure.BackgroundJobs;
+using ClinicManagement.Infrastructure.Data;
+using ClinicManagement.Infrastructure.Data.Interceptors;
+using ClinicManagement.Infrastructure.Identity;
+using ClinicManagement.Infrastructure.Payments;
+using ClinicManagement.Infrastructure.Repsitories;
+using ClinicManagement.Infrastructure.Services;
+using ClinicManagement.Infrastructure.Settings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
-using ClinicManagement.Infrastructure.BackgroundJobs;
-using ClinicManagement.Infrastructure.Data;
-using ClinicManagement.Infrastructure.Data.Interceptors;
-using ClinicManagement.Infrastructure.Identity;
-using ClinicManagement.Infrastructure.Services;
-using ClinicManagement.Application.Common.Interfaces;
-using ClinicManagement.Infrastructure.Repsitories;
-using ClinicManagement.Infrastructure.Settings;
-using ClinicManagement.Domain.Identity;
 
 
 namespace ClinicManagement.Infrastructure
@@ -111,8 +112,11 @@ namespace ClinicManagement.Infrastructure
             services.Configure<TwilioSettings>(configuration.GetSection("Twilio"));
             services.AddScoped<ISmsService, TwilioSmsService>();
 
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IPaymobClient, PaymobClient>();
+            services.AddScoped<IHmacValidator, HmacValidator>();
+            services.AddHttpClient();
 
-            
 
 
             return services;
