@@ -64,7 +64,7 @@ namespace ClinicManagement.Application.Featuers.Sessions.Command.CompleteSession
 
                 
                 //make amount determine by doctor in futuer
-                var createInvoiceResult = Invoice.Create(Guid.NewGuid(),session.Id, appointment!.PatientId, 150);
+                var createInvoiceResult = Invoice.Create(Guid.NewGuid(),session.Id, appointment!.PatientId, 1200);
 
 
                 if(createInvoiceResult.IsError) 

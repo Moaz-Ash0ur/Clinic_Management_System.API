@@ -1,4 +1,4 @@
-﻿using ClinicManagement.Application.Common.Errors;
+using ClinicManagement.Application.Common.Errors;
 using ClinicManagement.Application.Common.Interfaces;
 using ClinicManagement.Domain.Common.Results;
 using ClinicManagement.Domain.Invoices;
@@ -188,11 +188,11 @@ namespace ClinicManagement.Infrastructure.Payments
                 return Error.Failure("Exception occurred while creating payment intent");
             }
         }
-    
-    
-    
-    
-    
+
+
+
+
+
     }
 
 
