@@ -149,8 +149,8 @@ namespace ClinicManagement.Infrastructure.Payments
                     extras = new { invoiceId = invoice.Id },
                     special_reference = specialReference,
                     expiration = 3600,
-                    notification_url = "https://8adf-41-39-207-6.ngrok-free.app/api/payments/server-callback",
-                    redirection_url = "https://localhost:7020/index.html#/"
+                    notification_url = "https://yourdomain/api/v1/payments/webhook",
+                    redirection_url = "https://yourdomain/index.html#/"
                 };
 
                 var request = new HttpRequestMessage(HttpMethod.Post, "https://accept.paymob.com/v1/intention");
